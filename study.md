@@ -61,3 +61,33 @@ var a error 			// error 是接口
 无缓冲的通道，写入和读取应该放在两个协程中，防止堵塞
 带缓冲的通道可以在同一协程进行读写操作
 ```
+
+* 20191031<br>
+```
+//go获取线程ID
+package main
+
+import (
+	"fmt"
+	"runtime"
+	"strconv"
+	"strings"
+)
+
+func GetGoid() int64 {
+	var (
+		buf [64]byte
+		n   = runtime.Stack(buf[:], false)
+		stk = strings.TrimPrefix(string(buf[:n]), "goroutine ")
+	)
+
+	idField := strings.Fields(stk)[0]
+	id, err := strconv.Atoi(idField)
+	if err != nil {
+		panic(fmt.Errorf("can not get goroutine id: %v", err))
+	}
+
+	return int64(id)
+}
+
+```
