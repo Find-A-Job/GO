@@ -133,4 +133,52 @@ func main() {
 	}
 }
 
+/**/
+//allData，usedData
+//返回一个切片，内包含allData中的所有数据，
+//allData，usedData中都不可以有重复值，且allData中不可出现0值
+//思路:关键词#交换。因为所有值只出现一次(唯一性),将allData和usedData做对比
+//若a[0]是非零值，则在b中找出该值，确定该值所在下标n，然后将b[n]与b[0]交换，然后判断a[1]，···。
+//遍历完成后，a中的非零值均在b中有同样位置
+func fillSlice(usedData []byte, allData []byte) []byte {
+	retVal := make([]byte, len(allData))
+	//检查入参合法性
+	//...
+	if len(usedData) > len(allData) {
+		return retVal
+	}
+	//检查是否有重复值
+	if checkRepeat(usedData) || checkRepeat(allData) {
+		return retVal
+	}
+
+	copy(retVal, allData)
+	//遍历并交换其值
+	for ind, val := range usedData {
+		if val != 0x0 {
+			curVal := val
+			changeVal := retVal[ind]
+
+			changeValByVal(retVal, curVal, changeVal)
+			retVal[ind] = curVal
+		}
+	}
+
+	return retVal
+}
+
+func changeValByVal(data []byte, searchVal byte, replaceVal byte) {
+	index := 0
+	for ind, val := range data {
+		if val == searchVal {
+			index = ind
+			break
+		}
+	}
+	data[index] = replaceVal
+}
+
+func checkRepeat(data []byte) bool {
+	return false
+}
 ```
