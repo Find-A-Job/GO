@@ -91,3 +91,46 @@ func GetGoid() int64 {
 }
 
 ```
+
+* 20191110<br>
+```
+//文件属性
+package main
+
+import (
+	"fmt"
+	"io/ioutil"
+	"os"
+)
+
+func main() {
+	info, ok := os.Stat("C:\\Users\\Administrator\\Desktop\\EasyX_Help.chw")
+	if ok != nil {
+		fmt.Printf("读取失败:%v\n", ok)
+	}
+
+	// Name() string       // base name of the file
+	// Size() int64        // length in bytes for regular files; system-dependent for others
+	// Mode() FileMode     // file mode bits
+	// ModTime() time.Time // modification time
+	// IsDir() bool        // abbreviation for Mode().IsDir()
+	// Sys() interface{}   // underlying data source (can return nil)
+	fmt.Printf("文件信息:%v\n", info)
+	fmt.Printf("文件名:%v\n", info.Name())
+	fmt.Printf("文件大小(byte):%v\n", info.Size())
+	fmt.Printf("文件模式:%v\n", info.Mode())
+	fmt.Printf("文件修改时间:%v\n", info.ModTime())
+	fmt.Printf("是否目录:%v\n", info.IsDir())
+
+	fmt.Printf("\n")
+	files, err := ioutil.ReadDir("c:\\")
+	if err != nil {
+		fmt.Printf("获取失败:%v\n", err)
+	}
+
+	for _, file := range files {
+		fmt.Printf("文件名:%v\n", file.Name())
+	}
+}
+
+```
