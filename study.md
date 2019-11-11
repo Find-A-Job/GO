@@ -184,9 +184,64 @@ func checkRepeat(data []byte) bool {
 ```
 * 20191111<br>
 ```
-go获取文件属性
+//go获取文件属性
 fileInfo, _ := os.Stat("test.log")
 fileSys := fileInfo.Sys().(*syscall.Win32FileAttributeData)
 fileAttributes:= fileSys.FileAttributes
 fmt.Println(fileAttributes)
+
+//准备一个集合m,m是allData的副本，将usedData和m做差集运算，得到集合n,然后将n和usedData组合成新的集合x，len(x)==len(m)
+func fillSlice2(usedData []byte, allData []byte) []byte {
+	retVal := make([]byte, 0, len(allData))
+	temp := make([]byte, len(allData))
+	//检查入参合法性
+	//...
+	if len(usedData) > len(allData) {
+		return retVal
+	}
+	//检查是否有重复值
+	if checkRepeat(usedData) || checkRepeat(allData) {
+		return retVal
+	}
+
+	copy(temp, allData)
+	//fmt.Printf("before:%v\n", temp)
+	for _, val := range usedData {
+		if val != 0x0 {
+			temp = cutValFromSlice(temp, val)
+		}
+	}
+	//fmt.Printf("after:%v\n", temp)
+
+	retVal = append(retVal, usedData...)
+	retVal = append(retVal, temp...)
+
+	return retVal
+}
+func cutValFromSlice(data []byte, val byte) []byte {
+	retVal := make([]byte, 0, len(data)-1)
+	index := -1
+	for ind, valLocal := range data {
+		if valLocal == val {
+			index = ind
+		}
+	}
+	//fmt.Printf("index:%v\n", index)
+	if index == -1 {
+		return nil
+	} else {
+		if index == 0 {
+			retVal = append(retVal, data[1:]...)
+		} else if index == len(data)-1 {
+			retVal = append(retVal, data[:len(data)-1]...)
+		} else {
+			retVal = append(retVal, data[:index]...)
+			//fmt.Printf("retVal:%v\n", retVal)
+			retVal = append(retVal, data[index+1:]...)
+			//fmt.Printf("retVal:%v\n", retVal)
+		}
+	}
+	//fmt.Printf("retVal:%v\n", retVal)
+	return retVal
+}
 ```
