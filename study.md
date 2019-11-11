@@ -182,3 +182,11 @@ func checkRepeat(data []byte) bool {
 	return false
 }
 ```
+* 20191111<br>
+```
+go获取文件属性
+fileInfo, _ := os.Stat("test.log")
+fileSys := fileInfo.Sys().(*syscall.Win32FileAttributeData)
+fileAttributes:= fileSys.FileAttributes
+fmt.Println(fileAttributes)
+```
