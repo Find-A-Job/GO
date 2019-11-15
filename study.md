@@ -245,3 +245,30 @@ func cutValFromSlice(data []byte, val byte) []byte {
 	return retVal
 }
 ```
+* 20191110<br>
+```
+//当前分支master
+$ git branch
+//从当前分支创建一个dev分支
+$ git branch dev
+//切换到dev分支
+$ git checkout dev
+//修改提交文件
+$ git add -A
+$ git commit -m "xxx"
+//发现远程仓库的master分支有新文件被push
+//转到master分支
+$ git checkout master
+//pull拉取新文件
+$ git pull origin master
+//这时候想将dev分支的文件和master同步(但不合并到master)
+//不使用merge命令，这会使commit历史多出一条merge提交
+$ git checkout dev
+$ git rebase master
+//将dev分支合并到master分支并push
+$ git checkout master
+$ git merge dev
+$ git push origin master
+//这时的commit历史是一条线
+$ git log --graph
+```
