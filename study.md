@@ -272,3 +272,52 @@ $ git push origin master
 //这时的commit历史是一条线
 $ git log --graph
 ```
+
+* 20191121<br>
+```
+//go指针深拷贝
+package main
+
+import (
+	"fmt"
+)
+
+type f223 struct {
+	v1 int
+	v2 []byte
+}
+func main(){
+ ff()
+}
+func ff() {
+	var fkk *f223
+	fkk = &f223{v1: 1,
+		v2: []byte{1, 2},
+	}
+	fkk2 := fkk
+
+	fmt.Printf("%p, %p, %v, %v\n", fkk, fkk2, fkk, fkk2)
+	fkk.v1 = 4
+	fmt.Printf("%p, %p, %v, %v\n", fkk, fkk2, fkk, fkk2)
+	fkk2.v1 = 8
+	fmt.Printf("%p, %p, %v, %v\n", fkk, fkk2, fkk, fkk2)
+
+	fmt.Printf("\n")
+
+	fkk3 := &f223{}
+	*fkk3 = *fkk
+
+	fmt.Printf("%p, %p, %v, %v\n", fkk, fkk3, fkk, fkk3)
+	fkk.v1 = 9
+	fmt.Printf("%p, %p, %v, %v\n", fkk, fkk3, fkk, fkk3)
+
+	//运行结果
+	// 0xc0000044a0, 0xc0000044a0, &{1 [1 2]}, &{1 [1 2]}
+	// 0xc0000044a0, 0xc0000044a0, &{4 [1 2]}, &{4 [1 2]}
+	// 0xc0000044a0, 0xc0000044a0, &{8 [1 2]}, &{8 [1 2]}
+
+	// 0xc0000044a0, 0xc0000045a0, &{8 [1 2]}, &{8 [1 2]}
+	// 0xc0000044a0, 0xc0000045a0, &{9 [1 2]}, &{8 [1 2]}
+}
+
+```
