@@ -321,3 +321,46 @@ func ff() {
 }
 
 ```
+* 20200412<br>
+```
+// (多返回值的)匿名函数不能((和单个参数混合)作为(另一个多参数函数的)参数)使用
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+
+	xxx1(1, 2, 3, 4) //正常
+	xxx1(1, func() (int, int, int) {
+		return 1, 2, 3
+	}()) //not enough arguments in call to xxx1
+	xxx1(func() (int, int, int) {
+		return 1, 2, 3
+	}(), 4) // not enough arguments in call to xxx1
+	xxx1(1, 2, func() (int, int) {
+		return 1, 2
+	}()) //not enough arguments in call to xxx1
+	xxx1(func() (int, int) {
+		return 1, 2
+	}(), 1, 2) //not enough arguments in call to xxx1
+	xxx1(1, 2, 3, func() int {
+		return 1
+	}()) //正常
+	xxx1(func() int {
+		return 1
+	}(), 1, 2, 3) //正常
+	xxx1(func() (int, int, int, int) {
+		return 1, 2, 3, 4
+	}()) //正常
+
+	time.Sleep(time.Second * 5)
+}
+
+func xxx1(i int, j int, k int, l int) {
+	fmt.Printf("%v, %v, %v, %v\n", i, j, k, l)
+}
+
+```
