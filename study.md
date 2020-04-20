@@ -364,3 +364,33 @@ func xxx1(i int, j int, k int, l int) {
 }
 
 ```
+* 20200421<br>
+```
+//获取本机ip和mac
+func GetMac() bool {
+	netInterfaces, err := net.Interfaces()
+	if err != nil {
+		fmt.Println("net.Interfaces failed, err:", err.Error())
+		return false
+	}
+
+	for i := 0; i < len(netInterfaces); i++ {
+		if (netInterfaces[i].Flags & net.FlagUp) != 0 {
+			addrs, _ := netInterfaces[i].Addrs()
+			fmt.Printf("HardwareAddr:%v\n", netInterfaces[i].HardwareAddr.String())
+
+			for _, address := range addrs {
+				if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+					if ipnet.IP.To4() != nil {
+						//fmt.Println(ipnet.IP.String())
+						fmt.Printf("%v\n", ipnet.IP.String())
+						//return true
+					}
+				}
+			}
+		}
+	}
+
+	return false
+}
+```
