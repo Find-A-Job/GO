@@ -6,7 +6,7 @@
 http.HandlerFunc
 (w http.ResponseWriter, req *http.Request)
 ```
-* 先执行 **req.ParseForm()** 才能使用各类form
+* 先执行 **req.ParseForm()** 才能使用form
 * **req.Form**对应get,以下简称rf
 
 |值|说明|类型|
@@ -24,6 +24,7 @@ http.HandlerFunc
 |``||``|
 |``||``|
 * **req.MultipartForm**对应upload,以下简称rm
+> 先执行req.ParseMultipartForm()
 
 |值|说明|类型|
 |----|----|----|
@@ -36,3 +37,27 @@ http.HandlerFunc
 |`rm.File["key"][0].Size`|文件大小|`int64`|
 |`rm.File["key"][0].open()`|打开文件|`function`|
 |``||``|
+
+* 在线图片
+```
+// 关键的一步，目录后要带上"/"
+http.HandleFunc("/image/", imageServer)
+// 访问图片，将图片转为byte写入响应体内
+func imageServer(w http.ResponseWriter, req *http.Request) {
+	fmt.Printf("imageServer:%v, %v\n", req.URL, req.URL.Path)
+  //根据自身的目录调整path
+	file, err := os.Open(".." + req.URL.Path)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	defer file.Close()
+	buff, err := ioutil.ReadAll(file)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+		return
+	}
+	w.Write(buff)
+}
+```
