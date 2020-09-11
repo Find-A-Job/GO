@@ -61,3 +61,75 @@ func imageServer(w http.ResponseWriter, req *http.Request) {
 	w.Write(buff)
 }
 ```
+* 带form的post
+```
+// 要求格式
+{
+  "touser": "OPENID",
+  "template_id": "TEMPLATE_ID",
+  "page": "index",
+  "miniprogram_state":"developer",
+  "lang":"zh_CN",
+  "data": {
+      "number01": {
+          "value": "339208499"
+      },
+      "date01": {
+          "value": "2015年01月05日"
+      },
+      "site01": {
+          "value": "TIT创意园"
+      } ,
+      "site02": {
+          "value": "广州市新港中路397号"
+      }
+  }
+}
+----------------------------------------------------------------------
+	// 地址
+	urlString := wxMsgSend + "?access_token=" + accToken.at
+	// 获取时间
+	postTime := getCurrentDateTimeWX()
+	// 包装为map
+	var sss = map[string]interface{}{
+		"touser":            openid,
+		"template_id":       "mGEdmENb4c23N1E4uXK6W_fvytR1iKfwOETJaKacsjE",
+		"page":              "index",
+		"miniprogram_state": "developer",
+		"lang":              "zh_CN",
+		"data": map[string]interface{}{
+			"character_string1": map[string]interface{}{
+				"value": "339208499",
+			},
+			"date3": map[string]interface{}{
+				"value": postTime,
+			},
+			"thing5": map[string]interface{}{
+				"value": "xxx投递广告",
+			},
+		},
+	}
+	// 一定要转json
+	sssRes, _ := json.Marshal(&sss)
+	fmt.Printf("test:%v\n", string(sssRes))
+
+	req, err := http.NewRequest("POST", urlString, strings.NewReader(string(sssRes)))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		// handle error
+		fmt.Printf("PostForm err\n")
+		return
+	}
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		// handle error
+		fmt.Printf("ReadAll err\n")
+		return
+	}
+
+	fmt.Println(string(body))
+```
