@@ -5,6 +5,9 @@
 mkdir -p $GOPATH/src/golang.org/x
 cd $GOPATH/src/golang.org/x
 git clone https://github.com/golang/net.git
+有些时候（所需要的包的）名称在github上不一样，应该先去github上搜索一下这个包，然后
+git clone https://github.com/golang/go-xxx.git xxx
+修改为所需要的名称
 ```
 
 * `package go.micro.srv.consignment;` 指定package, 是为了避免和其他的.proto文件的message名称冲突
